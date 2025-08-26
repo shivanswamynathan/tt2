@@ -8,7 +8,7 @@ class RevisionPrompts:
     """
     
     @staticmethod
-    def get_basic_revision_prompt(topic: str, content: str, user_query: str = None, is_start: bool = False) -> str:
+    def get_basic_revision_prompt(topic: str, content: str, user_query: str = None, is_start: bool = False, last_bot_message: str = None) -> str:
         """Type 1: Basic Revision Helper - Main teaching and question answering"""
         
         if is_start:
@@ -32,6 +32,8 @@ class RevisionPrompts:
             return f"""
             The student asked a question about "{topic}".
             
+            Previous assistant message (for context): "{(last_bot_message or '').strip()}"
+            
             Student's question: "{user_query}"
             
             REQUIREMENTS:
@@ -50,6 +52,8 @@ class RevisionPrompts:
         else:
             return f"""
             Continue teaching about "{topic}".
+            
+            Previous assistant message (for continuity): "{(last_bot_message or '').strip()}"
             
             REQUIREMENTS:
             - Explain the next concept clearly
@@ -97,7 +101,7 @@ class RevisionPrompts:
         """
     
     @staticmethod
-    def get_feedback_progress_prompt(user_answers: str, topic: str, correct_answers: str = "", performance_level: str = "good") -> str:
+    def get_feedback_progress_prompt(user_answers: str, topic: str, correct_answers: str = "", performance_level: str = "good", last_bot_message: str = None) -> str:
         """Type 3: Feedback & Progress - Quiz feedback and learning progress"""
 
         base_requirements = """
@@ -111,6 +115,8 @@ class RevisionPrompts:
         if performance_level == "poor":  # ≤50% performance
             return f"""
             The student performed poorly (≤50%) on the quiz about "{topic}".
+            
+            Previous assistant message (for context): "{(last_bot_message or '').strip()}"
             
             Student's answers: {user_answers}
             Correct answers: {correct_answers}
@@ -130,6 +136,8 @@ class RevisionPrompts:
         elif performance_level == "good":  # >50% performance
             return f"""
             The student performed well (>50%) on the quiz about "{topic}".
+            
+            Previous assistant message (for context): "{(last_bot_message or '').strip()}"
             
             Student's answers: {user_answers}
             Correct answers: {correct_answers}
@@ -151,6 +159,8 @@ class RevisionPrompts:
         else:  # General progress update
             return f"""
             Provide a progress update for the student learning "{topic}".
+
+            Previous assistant message (for context): "{(last_bot_message or '').strip()}"
 
             {base_requirements}
             
