@@ -99,6 +99,14 @@ class RevisionPrompts:
     @staticmethod
     def get_feedback_progress_prompt(user_answers: str, topic: str, correct_answers: str = "", performance_level: str = "good") -> str:
         """Type 3: Feedback & Progress - Quiz feedback and learning progress"""
+
+        base_requirements = """
+        REQUIREMENTS:
+        - For each question, check if student's answer is correct or incorrect
+        - Explicitly say "Correct" or "Incorrect" for each question
+        - Give the correct answer and a short explanation if incorrect
+        - If any question was not answered, mention it and give the correct answer
+        """
         
         if performance_level == "poor":  # ≤50% performance
             return f"""
@@ -106,7 +114,8 @@ class RevisionPrompts:
             
             Student's answers: {user_answers}
             Correct answers: {correct_answers}
-            
+
+            {base_requirements}
             REQUIREMENTS:
             - Be very encouraging and supportive (NOT discouraging)
             - Explain the correct answers with simple examples
@@ -124,6 +133,8 @@ class RevisionPrompts:
             
             Student's answers: {user_answers}
             Correct answers: {correct_answers}
+
+            {base_requirements}
             
             REQUIREMENTS:
             - Celebrate their success enthusiastically
@@ -140,6 +151,8 @@ class RevisionPrompts:
         else:  # General progress update
             return f"""
             Provide a progress update for the student learning "{topic}".
+
+            {base_requirements}
             
             REQUIREMENTS:
             - Show what they've learned so far
